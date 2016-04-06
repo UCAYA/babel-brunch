@@ -4,7 +4,7 @@ const babel = require('babel-core');
 const anymatch = require('anymatch');
 const loadRc = require('./load-config');
 
-const reIg = /^(bower_components|node_modules\/[.-\w]-brunch|vendor)/;
+const reIg = /^(bower_components|node_modules|vendor)/;
 const reJsx = /\.(es6|jsx|js)$/;
 
 
@@ -26,12 +26,7 @@ class BabelCompiler {
       this.pattern = opts.pattern;
       delete opts.pattern;
     }
-    if (opts.only) {
-      this.isOnly = anymatch(opts.only);
-      this.isIgnored = (file) => !this.isOnly(file);
-    } else {
-      this.isIgnored = anymatch(opts.ignore || reIg);
-    }
+    this.isIgnored = anymatch(opts.ignore || reIg);
     delete opts.only;
     delete opts.ignore;
     this.options = opts;

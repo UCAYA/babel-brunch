@@ -1,12 +1,12 @@
 {
-  "name": "babel-brunch",
-  "version": "6.0.2",
+  "name": "babel6-brunch",
+  "version": "7.0.0",
   "description": "Brunch plugin to turn ES6 code into vanilla ES5 with no runtime required.",
-  "author": "Elan Shanker",
-  "homepage": "https://github.com/babel/babel-brunch",
+  "author": "Colin Bate",
+  "homepage": "https://github.com/colinbate/babel-brunch/tree/babel6",
   "repository": {
     "type": "git",
-    "url": "https://github.com/babel/babel-brunch.git"
+    "url": "https://github.com/colinbate/babel-brunch.git"
   },
   "keywords": [
     "babel",
@@ -21,7 +21,7 @@
   "scripts": {
     "test": "eslint index.js && mocha"
   },
-  "files": ["index.js"],
+  "files": ["index.js", "load-config.js"],
   "dependencies": {
     "babel-core": "^6.0.0",
     "anymatch": "^1.0.0",

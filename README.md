@@ -1,5 +1,9 @@
-babel-brunch
-===========
+babel6-brunch
+=============
+
+*This is a fork of the official Babel plugin for brunch, one which adds .babelrc
+reading and fixes patterns and sourcemaps*.
+
 Brunch plugin using [babel](https://github.com/babel/babel) to turn ES6 code
 into vanilla ES5 with no runtime required.
 
@@ -8,12 +12,18 @@ except those it is configured to ignore, unless you use the `pattern` option.
 
 Installation
 ------------
-`npm install --save babel-brunch`
+
+`npm install --save babel6-brunch`
 
 Configuration
 -------------
+
+This plugin will read in your `.babelrc` file or the `babel` section of your
+`package.json` as the base for your configuration. These values will be
+overridden by anything in the brunch config file.
+
 Set [babel options](https://babeljs.io/docs/usage/options) in your brunch
-config (such as `brunch-config.coffee`) except for `filename` and `sourceMap`
+config (such as `brunch-config.coffee`) except for `filename` and `sourceMaps`
 which are handled internally.
 
 This plugin uses, by default, the
@@ -22,7 +32,7 @@ preset, then set the configuration option to an empty array.
 
 Additionally, you can set an `ignore` value to specify which `.js` files in
 your project should not be compiled by babel. By default, `ignore` is set to
-`/^(bower_components|vendor)/`.
+`/^(bower_components|node_modules|vendor)/`.
 
 You can also set `pattern` to a regular expression that will match the file
 paths you want compiled by babel, which will override the standard behavior of
