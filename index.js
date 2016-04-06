@@ -2,30 +2,39 @@
 
 const babel = require('babel-core');
 const anymatch = require('anymatch');
+const loadRc = require('./load-config');
 
 const reIg = /^(bower_components|node_modules\/[.-\w]-brunch|vendor)/;
 const reJsx = /\.(es6|jsx|js)$/;
+
+
 
 class BabelCompiler {
   constructor(config) {
     if (!config) config = {};
     const options = config.plugins &&
       (config.plugins.babel || config.plugins.ES6to5) || {};
-    const opts = Object.keys(options).reduce((obj, key) => {
-      if (key !== 'sourceMap' && key !== 'ignore') {
-        obj[key] = options[key];
-      }
-      return obj;
-    }, {});
-    opts.sourceMap = !!config.sourceMaps;
+    const opts = loadRc(config.paths && config.paths.root, options.configFile);
+    Object.keys(options).forEach(key => {
+      opts[key] = options[key];
+    });
+    delete opts.configFile;
+    opts.sourceMaps = !!config.sourceMaps;
+    if (!opts.presets) opts.presets = ['es2015'];
+    if (opts.presets.indexOf('react') !== -1) this.pattern = reJsx;
+    if (opts.presets.length === 0) delete opts.presets;
     if (opts.pattern) {
       this.pattern = opts.pattern;
       delete opts.pattern;
     }
-    if (!opts.presets) opts.presets = ['es2015'];
-    if (opts.presets.indexOf('react') !== -1) this.pattern = reJsx;
-    if (opts.presets.length === 0) delete opts.presets;
-    this.isIgnored = anymatch(options.ignore || reIg);
+    if (opts.only) {
+      this.isOnly = anymatch(opts.only);
+      this.isIgnored = (file) => !this.isOnly(file);
+    } else {
+      this.isIgnored = anymatch(opts.ignore || reIg);
+    }
+    delete opts.only;
+    delete opts.ignore;
     this.options = opts;
   }
 
