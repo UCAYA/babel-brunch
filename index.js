@@ -8,7 +8,6 @@ const reIg = /^(bower_components|node_modules\/[.-\w]-brunch|vendor)/;
 const reJsx = /\.(es6|jsx|js)$/;
 
 
-
 class BabelCompiler {
   constructor(config) {
     if (!config) config = {};
