@@ -6,7 +6,8 @@ const readJson = file => {
     const content = fs.readFileSync(file, {encoding: 'utf8'});
     return JSON.parse(content);
   } catch (_e) {
-    return false;
+    console.error('babel6-brunch: Error loading JSON file "' + file + '"');
+    throw _e;
   }
 };
 
