@@ -1,8 +1,7 @@
 babel6-brunch
 =============
 
-*This is a fork of the official Babel plugin for brunch, one which adds .babelrc
-reading and fixes patterns and sourcemaps*.
+> *This is a fork of the official Babel plugin for brunch, one which adds .babelrc reading.*
 
 Brunch plugin using [babel](https://github.com/babel/babel) to turn the latest
 ECMAScript standard code into vanilla ES5 with no runtime required.
@@ -20,11 +19,11 @@ Installation
 Usage
 -----
 
-- **No configuration is required by default.** `es2015` and `es2016` presets are included.
+- **No configuration is required by default.** The plugin will use your `.babelrc` file or the `babel` section of your `package.json`. If neither exist, it will use the `env` preset.
 - To add **React** preset:
     - Execute `npm install --save-dev babel-preset-react`, then adjust the `presets` option in `brunch-config.js`:
-    - `plugins: {babel: {presets: ['es2015', 'es2016', 'react']}}`
-- Default behavior is to handle `js` files which are not dependencies and `jsx` files if you enable React preset.
+    - `plugins: {babel: {presets: ['env', 'react']}}`
+- Default behavior is to handle `js` and `jsx` files which are not dependencies.
 - To specify preset options: `{presets: [['transform-es2015-template-literals', { spec: true }]]}`
 
 Configuration
@@ -60,7 +59,7 @@ To use no preset, set the configuration option to an empty array.
 
 Additionally, you can set an `ignore` value to specify which `.js` files in
 your project should not be compiled by babel. By default, `ignore` is set to
-`/^(bower_components|node_modules|vendor)/`.
+`/^(bower_components|vendor)/`.
 
 You can also set `pattern` to a regular expression that will match the file
 paths you want compiled by babel, which will override the standard behavior of

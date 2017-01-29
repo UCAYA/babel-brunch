@@ -25,7 +25,7 @@ class BabelCompiler {
     if (!config) config = {};
     const options = config.plugins &&
       (config.plugins.babel || config.plugins.ES6to5) || {};
-    if (options && !config.plugins.babel && config.plugins.ES6to5) {
+    if (options && config.plugins && !config.plugins.babel && config.plugins.ES6to5) {
       logger.warn(warns.ES6to5);
     }
     const opts = loadRc(config.paths && config.paths.root, options.configFile);

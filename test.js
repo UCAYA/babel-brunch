@@ -40,22 +40,25 @@ describe('Plugin', function() {
     }, error => assert(!error));
   });
 
-  it('should load indicated presets', function(done) {
-    var content = 'x => x'
-    var expected = 'function'
+  it('should load indicated presets', (done) => {
+    var content = 'x => x';
+    var expected = 'function';
 
-    plugin = new Plugin({ paths: { root: '.' }, plugins: { babel: { presets: ['es2015'] }}});
+    plugin = new Plugin({ paths: { root: '.' }, plugins: { babel: { presets: ['env'] }}});
     plugin.compile({data: content, path: 'file.js'}).then(result => {
       assert(result.data.indexOf(expected) !== -1);
       done();
-    }, error => assert(!error));
+    }, error => {
+      assert(!error);
+      done();
+    });
   });
 
-  it('should load indicated presets with options', function(done) {
-    var content = "export default 0";
+  it('should load indicated presets with options', (done) => {
+    var content = 'export default 0';
     var expected = 'System.register';
 
-    plugin = new Plugin({ paths: { root: '.' }, plugins: { babel: { presets: [['es2015', { modules: 'systemjs' }]] }}});
+    plugin = new Plugin({ paths: { root: '.' }, plugins: { babel: { presets: [['env', { modules: 'systemjs' }]] }}});
     plugin.compile({data: content, path: 'file.js'}).then(result => {
       assert(result.data.indexOf(expected) !== -1);
       done();
@@ -73,9 +76,9 @@ describe('Plugin', function() {
     }, error => assert(!error));
   });
 
-  it('should load indicated plugins with options', function(done) {
-    var content = '`var x = 1; test ${x}`'
-    var expected = 'String(x)'
+  it('should load indicated plugins with options', (done) => {
+    var content = '`var x = 1; test ${x}`';
+    var expected = 'String(x)';
 
     plugin = new Plugin({ paths: { root: '.' }, plugins: { babel: { plugins: [['transform-es2015-template-literals', { spec: true }]] }}});
     plugin.compile({data: content, path: 'file.js'}).then(result => {
@@ -95,6 +98,7 @@ describe('Plugin', function() {
     });
     var sourceMapPlugin = new Plugin({
       paths: { root: '.' },
+      sourceMaps: true,
       plugins: {
         babel: {
           pattern: /\.(babel|es6|jsx)$/
