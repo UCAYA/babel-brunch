@@ -9,7 +9,7 @@ describe('Plugin', function() {
   this.timeout(10000); //eslint-disable-line no-magic-numbers
 
   beforeEach(() => {
-    plugin = new Plugin({});
+    plugin = new Plugin({ paths: { root: '.' }});
   });
 
   it('should be an object', () => {
@@ -23,7 +23,7 @@ describe('Plugin', function() {
   it('should do nothing for no preset', (done) => {
     var content = 'var c = {};\nvar { a, b } = c;';
 
-    plugin = new Plugin({ plugins: { babel: { presets: [] }}});
+    plugin = new Plugin({ paths: { root: '.' }, plugins: { babel: { presets: [] }}});
     plugin.compile({data: content, path: 'file.js'}).then(result => {
       assert(result.data.indexOf(content) !== -1);
       done();
@@ -32,8 +32,30 @@ describe('Plugin', function() {
 
   it('should compile and produce valid result', (done) => {
     var content = 'var c = {};\nvar {a, b} = c;';
-    var expected = 'var a = c.a;\nvar b = c.b;';
+    var expected = 'var a = c.a,\n    b = c.b;';
 
+    plugin.compile({data: content, path: 'file.js'}).then(result => {
+      assert(result.data.indexOf(expected) !== -1);
+      done();
+    }, error => assert(!error));
+  });
+
+  it('should load indicated presets', function(done) {
+    var content = 'x => x'
+    var expected = 'function'
+
+    plugin = new Plugin({ paths: { root: '.' }, plugins: { babel: { presets: ['es2015'] }}});
+    plugin.compile({data: content, path: 'file.js'}).then(result => {
+      assert(result.data.indexOf(expected) !== -1);
+      done();
+    }, error => assert(!error));
+  });
+
+  it('should load indicated presets with options', function(done) {
+    var content = "export default 0";
+    var expected = 'System.register';
+
+    plugin = new Plugin({ paths: { root: '.' }, plugins: { babel: { presets: [['es2015', { modules: 'systemjs' }]] }}});
     plugin.compile({data: content, path: 'file.js'}).then(result => {
       assert(result.data.indexOf(expected) !== -1);
       done();
@@ -44,7 +66,18 @@ describe('Plugin', function() {
     var content = 'var c = () => process.env.NODE_ENV;';
     var expected = '"use strict";\n\nvar c = function c() {\n  return undefined;\n};';
 
-    plugin = new Plugin({ plugins: { babel: { plugins: ['transform-node-env-inline'] }}});
+    plugin = new Plugin({ paths: { root: '.' }, plugins: { babel: { plugins: ['transform-node-env-inline'] }}});
+    plugin.compile({data: content, path: 'file.js'}).then(result => {
+      assert(result.data.indexOf(expected) !== -1);
+      done();
+    }, error => assert(!error));
+  });
+
+  it('should load indicated plugins with options', function(done) {
+    var content = '`var x = 1; test ${x}`'
+    var expected = 'String(x)'
+
+    plugin = new Plugin({ paths: { root: '.' }, plugins: { babel: { plugins: [['transform-es2015-template-literals', { spec: true }]] }}});
     plugin.compile({data: content, path: 'file.js'}).then(result => {
       assert(result.data.indexOf(expected) !== -1);
       done();
@@ -53,6 +86,7 @@ describe('Plugin', function() {
 
   describe('custom file extensions & patterns', () => {
     var basicPlugin = new Plugin({
+      paths: { root: '.' },
       plugins: {
         babel: {
           pattern: /\.(babel|es6|jsx)$/
@@ -60,7 +94,7 @@ describe('Plugin', function() {
       }
     });
     var sourceMapPlugin = new Plugin({
-      sourceMaps: true,
+      paths: { root: '.' },
       plugins: {
         babel: {
           pattern: /\.(babel|es6|jsx)$/
@@ -86,7 +120,7 @@ describe('Plugin', function() {
 
 
   it('should produce source maps', (done) => {
-    plugin = new Plugin({sourceMaps: true});
+    plugin = new Plugin({paths: { root: '.' }, sourceMaps: true});
 
     var content = 'let a = 1';
 
