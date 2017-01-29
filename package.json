@@ -1,6 +1,6 @@
 {
   "name": "babel6-brunch",
-  "version": "7.0.0",
+  "version": "7.0.1",
   "description": "Brunch plugin to turn ES6 code into vanilla ES5 with no runtime required.",
   "author": "Colin Bate",
   "homepage": "https://github.com/colinbate/babel-brunch/tree/babel6",
